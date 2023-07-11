@@ -23,16 +23,15 @@ jobs:
         pip install pandas requests beautifulsoup4
 
     - name: Create data directory
-       run:|
-        mkdir -p data
+      run: mkdir -p data
 
     - name: Run Python script
       run: python hm_scrape.py > data/$(date "+%Y%m%d-%H%M%S").txt
 
     - name: Add data to the repository
       run: |
-        git config user.name 'GitHub Actions'
-        git config user.email 'actions@users.noreply.github.com'
-        git add -A
-        git commit -m 'Updates' || exit 0
-        git push
+              git config user.name 'GitHub Actions'
+              git config user.email 'actions@users.noreply.github.com'
+              git add -A
+              git commit -m 'Updates' || exit 0
+              git push
