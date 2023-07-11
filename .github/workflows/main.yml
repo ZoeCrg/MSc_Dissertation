@@ -26,7 +26,7 @@ jobs:
         run: mkdir -p data
 
       - name: Run Python script
-        run: python hm_scrape.py > data/$(date "+%Y%m%d-%H%M%S").txt
+        run: python hm_scrape.py > data/$(date +%Y%m%d-%H%M%S).txt
 
       - name: Add data to the repository
         run: |
