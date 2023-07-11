@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '30 17 * * *' 
 
+# lets gh change files
+permissions: write-all
+
 jobs:
   run: 
       runs-on: ubuntu-latest
