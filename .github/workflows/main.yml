@@ -2,7 +2,7 @@ name: Scraping and Database Saving
 
 on:
   schedule:
-    - cron: '10 12 * * *' # Runs every day at 9am UK time
+    - cron: '30 11 * * *' 
 
 jobs:
   build:
