@@ -23,10 +23,9 @@ jobs:
         pip install pandas requests beautifulsoup4
 
     - name: Run Python script
-        run:|
-          python hm_scrape.py > data/$(date "+%Y%m%d-%H%M%S").txt
+      run: python hm_scrape.py > data/$(date "+%Y%m%d-%H%M%S").txt
 
-    - name: Run Git commands
+    - name: Add data to the repository
       run: |
         git config user.name 'GitHub Actions'
         git config user.email 'actions@users.noreply.github.com'
