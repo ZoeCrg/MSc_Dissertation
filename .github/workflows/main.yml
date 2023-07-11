@@ -22,6 +22,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pandas requests beautifulsoup4
 
+    - name: Create data directory
+       run:|
+        mkdir -p data
+
     - name: Run Python script
       run: python hm_scrape.py > data/$(date "+%Y%m%d-%H%M%S").txt
 
