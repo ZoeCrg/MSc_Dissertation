@@ -1,0 +1,14 @@
+     articleCode  ...                                fabric
+0     1198948001  ...                        Polyester 100%
+1     1189898001  ...                          Viscose 100%
+2     1189898002  ...                          Viscose 100%
+3     1178391002  ...  Lyocell 73%, Polyester 19%, Linen 8%
+4     1202384001  ...                        Polyester 100%
+...          ...  ...                                   ...
+1182  1198825001  ...                        Polyamide 100%
+1183  1190290001  ...                           Cotton 100%
+1184  1172122001  ...             Polyester 65%, Cotton 35%
+1185  1123919003  ...  Wool 52%, Polyester 43%, Elastane 5%
+1186  1168236001  ...    Lyocell 60%, Cotton 30%, Linen 10%
+
+[1187 rows x 32 columns]
