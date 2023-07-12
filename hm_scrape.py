@@ -84,4 +84,4 @@ while offset < total_products:
     df = pd.concat([df, new_df], axis=0, ignore_index=True)
     offset += page_size
 
-display(df)
+print(df)
