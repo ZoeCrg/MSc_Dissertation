@@ -4,7 +4,7 @@ on:
   push:
   workflow_dispatch: 
   schedule:
-    - cron: '30 17 * * *' 
+    - cron: '20 8 * * *' 
     
 # lets gh change files
 permissions: write-all
