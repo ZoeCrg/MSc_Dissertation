@@ -29,8 +29,52 @@ def fabric_function(link):
                     raise  # If all retries fail, raise the exception
 
         soup = bs(req.content, 'html.parser')
+    #     print(soup)
 
     fabric = ""
+
+   # Find the specific <div> element with id="section-materialsAndSuppliersAccordion"
+    div_element = soup.find('div', {'id': 'section-materialsAndSuppliersAccordion'})
+    composition_element = div_element.find('h3', text='Composition')
+    
+    if composition_element:
+    # Find all <h4> elements that represent different materials (e.g., Shell, Pocket lining)
+        material_headers = div_element.find_all('h4')
+        if material_headers:
+            for header in material_headers:
+                # Get the material name (e.g., Shell, Pocket lining)
+                material_name = header.text.strip()
+
+                # Get the <p> element containing the material information
+                material_info = header.find_next('p')
+
+                # Extract the text content of the <p> element
+                material_text = material_info.get_text(strip=True)
+
+                # Append the material information with the corresponding tag
+                fabric += f",[{material_name}] {material_text} "
+        else:
+            fabric = ",[Material] "
+            for x in div_element.find_all('li'):
+                for y in x.find_all('p'):
+                    fabric = fabric + y.text
+    
+    try:
+        additional_info_h3 = div_element.find('h3', text=' Additional material information')
+        
+        recycled_info_list = additional_info_h3.find_next('ul').find_all('li', text=lambda text: 'Recycled' in text or 'eco' in text or 'Organic' in text or 'Eco' in text or 'ECO' in text)
+
+        if recycled_info_list:
+            # Extract the text content of all the <li> elements containing "Recycled" information and store them in a list
+            recycled_texts = [item.get_text(strip=True) for item in recycled_info_list]
+            # Join all the elements in the list to form a single string
+            recycled_info = ", ".join(recycled_texts)
+            fabric += ", [Recycled] " + recycled_info
+    except:
+        pass
+
+    return fabric
+
 
     for x in soup.find_all('li'):
         for y in x.find_all('p'):
