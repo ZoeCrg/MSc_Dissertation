@@ -160,7 +160,7 @@ while offset < total_products:
     new_df = pd.DataFrame(data['products'])
 
 #remove
-    new_df= new_df.head(10)
+    new_df= new_df.head(5)
     
     new_df['fabric'] = new_df.link.apply(fabric_function)
     
@@ -180,7 +180,7 @@ def dataframe_to_json(df):
     return json_string
 
 current_datetime = datetime.now().strftime('%Y%m%d-%H%M%S')
-csv_filename = f"/data/data_{current_datetime}.csv"
+csv_filename = f"data/data_{current_datetime}.csv"
 
 # Save the DataFrame to the CSV file
 df.to_csv(csv_filename, index=False)
