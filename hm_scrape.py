@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import time
 import io
+import datetime
 
 def fabric_function(link):
     base_url = 'https://www2.hm.com'
@@ -173,5 +174,10 @@ import json
 def dataframe_to_json(df):
     json_string = df.to_json(orient='records')
     return json_string
+    
+csv_filename = f"data_{current_datetime}.csv"
+
+# Save the DataFrame to the CSV file
+df.to_csv(csv_filename, index=False)
 
 print(dataframe_to_json(df))
