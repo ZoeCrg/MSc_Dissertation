@@ -34,8 +34,11 @@ def fabric_function(link):
     fabric = ""
 
    # Find the specific <div> element with id="section-materialsAndSuppliersAccordion"
-    div_element = soup.find('div', {'id': 'section-materialsAndSuppliersAccordion'})
-    composition_element = div_element.find('h3', text='Composition')
+    try:
+        div_element = soup.find('div', {'id': 'section-materialsAndSuppliersAccordion'})
+        composition_element = div_element.find('h3', text='Composition')
+    except:
+        pass
     
     if composition_element:
     # Find all <h4> elements that represent different materials (e.g., Shell, Pocket lining)
