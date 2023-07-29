@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import time
 import io
-import datetime
+from datetime import datetime
 
 def fabric_function(link):
     base_url = 'https://www2.hm.com'
