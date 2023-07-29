@@ -33,6 +33,15 @@ jobs:
       - name: Run Python script
         run: python hm_scrape.py > data/$(date +%Y%m%d-%H%M%S).txt
 
+
+      - name: Save CSV as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: scraped_data
+          path: data/*.csv
+
+
+
       - name: Add data to the repository
         run: |
                 git config user.name 'GitHub Actions'
