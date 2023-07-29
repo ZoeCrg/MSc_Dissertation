@@ -158,9 +158,6 @@ while offset < total_products:
 
     data = req.json()
     new_df = pd.DataFrame(data['products'])
-
-#remove
-    new_df= new_df.head(5)
     
     new_df['fabric'] = new_df.link.apply(fabric_function)
     
