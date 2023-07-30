@@ -279,7 +279,8 @@ def add_columns_and_values(df):
                     df[material.upper()] = 0  # Initializing the column with None
                 # Assigning the percentage value to the corresponding cell
                 df.at[index, material.upper()] = percentage
-            except:\')
+            except:
+#                 old fabric function may of failed so we will try the link again to get the materials
                 link = str(row['link'])
                 new_fabric_value = fabric_function(link)
                 df.at[index, 'fabric'] = new_fabric_value 
