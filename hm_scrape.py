@@ -40,7 +40,6 @@ def fabric_function(link):
         composition_element = div_element.find('h3', text='Composition')
     except:
         pass
-    
     if composition_element:
     # Find all <h4> elements that represent different materials (e.g., Shell, Pocket lining)
         material_headers = div_element.find_all('h4')
@@ -66,7 +65,7 @@ def fabric_function(link):
     try:
         additional_info_h3 = div_element.find('h3', text=' Additional material information')
         
-        recycled_info_list = additional_info_h3.find_next('ul').find_all('li', text=lambda text: 'Recycled' in text or 'eco' in text or 'Organic' in text or 'Eco' in text or 'ECO' in text)
+        recycled_info_list = additional_info_h3.find_next('ul').find_all('li', text=lambda text: 'Recycled' in text or 'Organic' in text)
 
         if recycled_info_list:
             # Extract the text content of all the <li> elements containing "Recycled" information and store them in a list
@@ -79,6 +78,7 @@ def fabric_function(link):
 
     return fabric
 
+    
 
     for x in soup.find_all('li'):
         for y in x.find_all('p'):
