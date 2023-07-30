@@ -264,7 +264,7 @@ def add_columns_and_values(df):
     # Iterate through each row of the DataFrame
     for index, row in df.iterrows():
         composition_list = get_main((parse_material_compositions(row["fabric"])))
-        print(composition_list)
+        
         # Extracting the material name and percentage from the list
         for item in composition_list:
             try:
@@ -292,7 +292,6 @@ def add_columns_and_values(df):
                         # Assigning the percentage value to the corresponding cell
                         df.at[index, material.upper()] = percentage
                     except:
-                        print('failed again')
                         pass
                 
                 
