@@ -159,10 +159,11 @@ while offset < total_products:
     data = req.json()
     new_df = pd.DataFrame(data['products'])
     
-    new_df['fabric'] = new_df.link.apply(fabric_function)
-
 #remove
     new_df = new_df.head(5)
+
+    
+    new_df['fabric'] = new_df.link.apply(fabric_function)
     
     df = pd.concat([df, new_df], axis=0, ignore_index=True)
     offset += page_size
