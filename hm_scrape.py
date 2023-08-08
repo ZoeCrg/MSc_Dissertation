@@ -33,7 +33,8 @@ def fabric_function(link):
     #     print(soup)
 
     fabric = ""
-
+    #initialise composition_element
+    composition_element = None
    # Find the specific <div> element with id="section-materialsAndSuppliersAccordion"
     try:
         div_element = soup.find('div', {'id': 'section-materialsAndSuppliersAccordion'})
