@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup as bs
 import time
 import io
 from datetime import datetime
+import re
+import os
+import json
 
 def fabric_function(link):
     base_url = 'https://www2.hm.com'
@@ -28,9 +31,7 @@ def fabric_function(link):
                     continue
                 else:
                     raise  # If all retries fail, raise the exception
-
         soup = bs(req.content, 'html.parser')
-    #     print(soup)
 
     fabric = ""
     #initialise composition_element
@@ -62,10 +63,8 @@ def fabric_function(link):
             for x in div_element.find_all('li'):
                 for y in x.find_all('p'):
                     fabric = fabric + y.text
-    
     try:
         additional_info_h3 = div_element.find('h3', text=' Additional material information')
-        
         recycled_info_list = additional_info_h3.find_next('ul').find_all('li', text=lambda text: 'Recycled' in text or 'Organic' in text)
 
         if recycled_info_list:
@@ -76,32 +75,17 @@ def fabric_function(link):
             fabric += ", [Recycled] " + recycled_info
     except:
         pass
-
     return fabric
-
-    
-
-    for x in soup.find_all('li'):
-        for y in x.find_all('p'):
-            fabric = y.text
-
-    # Add a delay between requests
-    time.sleep(2)
-    return fabric
-
 
 params = {
     'sort': 'stock',
     'image-size': 'small',
     'image': 'model',
     'offset': "1",
-    'page-size': "50"
-}
-
+    'page-size': "50"}
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0'
-}
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/114.0'}
 
 retries = 3  # Maximum number of retries
 delay = 2  # Delay between retries in seconds
@@ -111,8 +95,7 @@ for attempt in range(retries):
         req = requests.get(
             'https://www2.hm.com/en_gb/ladies/new-arrivals/clothes/_jcr_content/main/productlisting.display.json',
             params=params,
-            headers=headers
-        )
+            headers=headers)
         req.raise_for_status()  # Raise an exception if the request was unsuccessful
         break  # If successful, exit the retry loop
     except (requests.RequestException, ConnectionError):
@@ -135,8 +118,7 @@ while offset < total_products:
         'image-size': 'small',
         'image': 'model',
         'offset': str(offset),
-        'page-size': str(page_size)
-    }
+        'page-size': str(page_size)}
 
     retries = 3  # Maximum number of retries
     delay = 2  # Delay between retries in seconds
@@ -146,8 +128,7 @@ while offset < total_products:
             req = requests.get(
                 'https://www2.hm.com/en_gb/ladies/new-arrivals/clothes/_jcr_content/main/productlisting.display.json',
                 params=params,
-                headers=headers
-            )
+                headers=headers)
             req.raise_for_status()  # Raise an exception if the request was unsuccessful
             break  # If successful, exit the retry loop
         except (requests.RequestException, ConnectionError):
@@ -164,22 +145,15 @@ while offset < total_products:
     df = pd.concat([df, new_df], axis=0, ignore_index=True)
     offset += page_size
 
-# csv_string = df.to_csv(index=False)
-
-# # Read the CSV string and print each line
-# csv_io = io.StringIO(csv_string)
-# for line in csv_io:
-#     print(line.strip())
-
-
 
 def read_the_csv(file):
     df = pd.read_csv(file)
     return df
 
-def parse_material_compositions(teststring, recycled_tag='Recycled'):
+# split the material string into three lists [main material], [secondary material], [recycled material]
+def parse_material_compositions(materialstring, recycled_tag='Recycled'):
     try:
-        splitup = (teststring.split(","))
+        splitup = (materialstring.split(","))
     except:
         return [[],[],[]]
     lists = []
@@ -190,6 +164,7 @@ def parse_material_compositions(teststring, recycled_tag='Recycled'):
             continue
         if i[0] == "[":
             try:
+                # If new list is empty do not append
                 if newlist:
                     lists.append(newlist)
             except: 
@@ -197,6 +172,7 @@ def parse_material_compositions(teststring, recycled_tag='Recycled'):
             newlist = []
         newlist.append(i)
     lists.append(newlist)
+    # clean square bracket tag from lists except recycled
     for l in lists:
         try:
             b = l[0].split('] ')
@@ -209,6 +185,7 @@ def parse_material_compositions(teststring, recycled_tag='Recycled'):
     return lists
 
 def get_recycled(lists):
+    # recycled list is the one where the first element is 'Recycled'
     for i in lists:
         try:
             if(i[0] == "Recycled"):
@@ -217,9 +194,11 @@ def get_recycled(lists):
             pass
 
 def get_main(lists):
+    # Main is always first list
     return lists[0]
 
 def get_secondary(lists):
+    # Obsolete however if needed returns list that is not recycled and not first
     if len(lists) <2:
         return
     secondary = []
@@ -231,28 +210,21 @@ def get_secondary(lists):
         return
     return secondary
 
-import re
-
 def remove_trademark_symbol(input_string):
     # Define a regular expression pattern to match the trademark symbol (\u2122 and \U00002122) in a case-insensitive manner
     pattern = r'\\[Uu]([0-9a-fA-F]{4,8})'
-
     # Use re.sub() to replace all occurrences of the pattern with an empty string
     cleaned_string = re.sub(pattern, '', input_string)
-
     return cleaned_string
 
 def split_material_and_percentage(input_string):
     # Define a regular expression pattern to match the material and percentage parts
     pattern = r'^(.*?)(\d+\%)$'
-    
     # Use the re.match function to find the pattern in the input_string
     match = re.match(pattern, input_string)
-    
     if match:
         # The first group (index 1) contains the material part
         material = match.group(1).strip()
-        
         # The second group (index 2) contains the percentage part
         percentage = match.group(2).strip()
         material = remove_trademark_symbol(material)
@@ -265,7 +237,6 @@ def add_columns_and_values(df):
     # Iterate through each row of the DataFrame
     for index, row in df.iterrows():
         composition_list = get_main((parse_material_compositions(row["fabric"])))
-        
         # Extracting the material name and percentage from the list
         for item in composition_list:
             try:
@@ -277,7 +248,7 @@ def add_columns_and_values(df):
                 # Assigning the percentage value to the corresponding cell
                 df.at[index, material.upper()] = percentage
             except:
-#                 old fabric function may of failed so we will try the link again to get the materials
+                # old fabric function may of failed so we will try the link again to get the materials
                 link = str(row['link'])
                 new_fabric_value = fabric_function(link)
                 df.at[index, 'fabric'] = new_fabric_value 
@@ -294,11 +265,7 @@ def add_columns_and_values(df):
                         df.at[index, material.upper()] = percentage
                     except:
                         pass
-                
-                
                 pass
-            
-    
     return df
 
 
@@ -308,9 +275,7 @@ def add_recycled_columns_and_values(df):
         if composition_list:
             for item in composition_list:
                 try:
-                    
                     material, percentage = split_material_and_percentage(item)
-                    
                     material = 'Sustainable ' + material
                     percentage = float(percentage.strip('%'))
                     # Adding a new column to the DataFrame if it doesn't exist
@@ -320,23 +285,14 @@ def add_recycled_columns_and_values(df):
                     df.at[index, material.upper()] = percentage
                 except:
                     pass
-    
     return df
-import os
+
 def process_build_file(df, dt):
     materialsdf =add_columns_and_values(df)
     recycledmaterialsdf =add_recycled_columns_and_values(materialsdf)
     recycledmaterialsdf['Date'] = dt
     return recycledmaterialsdf;
 
-
-
-
-
-
-
-
-import json
 def dataframe_to_json(df):
     json_string = df.to_json(orient='records')
     return json_string
@@ -348,4 +304,5 @@ csv_filename = f"data/data_{current_datetime}.csv"
 # Save the DataFrame to the CSV file
 df.to_csv(csv_filename, index=False)
 
+# Obsolete print (no longer used)
 print(dataframe_to_json(df))
