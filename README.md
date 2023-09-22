@@ -10,4 +10,4 @@ In the .github/workflows folder there is a file called 'main.yml' which details 
 Data is stored in the 'Data' file. This displays previous attempts of the code (.txt files), and the files used in my research project 
 (.csv files). 
 
-The .pynb file called '...' displays intiial investigation of H&M's JSON file and the data analysis conducted within the research project. This shows how I drew the results featured in the report. 
+The .pynb file called 'Data_Collection_and_Analysis_Dissertation' displays intiial investigation of H&M's JSON file and the data analysis conducted within the research project. This shows how I drew the results featured in the report. 
