@@ -5,7 +5,7 @@ Welcome to my GitHub repository for my Dissertation as a part of the MSc Computa
 Here you will find a 'hm_scrape.py' file which contains the code designing a web scraper to collect information from the 
 H&M womenswear new-in clothing section. 
 
-In the .github file there is a file called '...' which details how the web scraper is run every day as 10am to collect this information. 
+In the .github file there is a file called 'main.yml' which details how the web scraper is run every day as 10am to collect this information. 
 
 Data is stored in the 'Data' file. This displays previous attempts of the code (.txt files), and the files used in my research project 
 (.csv files). 
